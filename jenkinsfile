@@ -1,6 +1,10 @@
 pipeline {
   agent any
 
+  tools {
+    maven 'Maven-3.9.6'   // VERY IMPORTANT!
+  }
+
   stages {
 
     stage('Checkout') {
@@ -14,9 +18,9 @@ pipeline {
         echo 'Installing project dependencies using Maven...'
         script {
           if (isUnix()) {
-            sh 'mvn dependency:resolve'
+            sh "${MAVEN_HOME}/bin/mvn dependency:resolve"
           } else {
-            bat 'mvn dependency:resolve'
+            bat "\"${MAVEN_HOME}\\bin\\mvn.cmd\" dependency:resolve"
           }
         }
       }
@@ -26,11 +30,11 @@ pipeline {
       steps {
         script {
           if (isUnix()) {
-            sh 'mvn -B clean test'
-            sh 'mvn -B package'
+            sh "${MAVEN_HOME}/bin/mvn -B clean test"
+            sh "${MAVEN_HOME}/bin/mvn -B package"
           } else {
-            bat 'mvn -B clean test'
-            bat 'mvn -B package'
+            bat "\"${MAVEN_HOME}\\bin\\mvn.cmd\" -B clean test"
+            bat "\"${MAVEN_HOME}\\bin\\mvn.cmd\" -B package"
           }
         }
       }
